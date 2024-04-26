@@ -1,15 +1,19 @@
 import Header from "./Header"
 import {useState, useRef} from 'react'
-import { checkvalid, checkvalidname } from "../utils/checkvalid"
+import { checkvalid} from "../utils/checkvalid"
 import {auth} from "../utils/firebase"
-import {createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import {createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { addUser } from "../utils/userslice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
 
     const [isSigninForm, setIsSigninForm] = useState(true)
     const [errorMessage,setErrormessage] = useState(null)
 
-
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const toggleform = () => {
         setIsSigninForm(!isSigninForm)
@@ -34,7 +38,18 @@ if(!isSigninForm){
   .then((userCredential) => {
     // Signed up 
     const user = userCredential.user;
+  console.log(user,'user123')
+navigate("/browse")
     // ...
+    updateProfile(user, {
+      displayName: name.current.value,
+    })
+    const { uid, email, displayName} = auth.currentUser;
+    dispatch(addUser({
+      uid: uid,
+                  email: email,
+                  displayName: displayName,
+    }))
   })
   .catch((error) => {
     const errorCode = error.code;
@@ -48,6 +63,7 @@ if(!isSigninForm){
     // Signed in 
     const user = userCredential.user;
     // ...
+    navigate("/browse")
   })
   .catch((error) => {
     const errorCode = error.code;
