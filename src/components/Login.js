@@ -23,8 +23,6 @@ const Login = () => {
     const email = useRef(null)
     const password = useRef(null)
 
-    console.log(email.current?.value,'email')
-    console.log(name.current?.value,'email')
 
     const handleButtonClick = () => {
     const message = checkvalid(email.current?.value, password.current?.value )
@@ -38,7 +36,6 @@ if(!isSigninForm){
   .then((userCredential) => {
     // Signed up 
     const user = userCredential.user;
-  console.log(user,'user123')
 navigate("/browse")
     // ...
     updateProfile(user, {
